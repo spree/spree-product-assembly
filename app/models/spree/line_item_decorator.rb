@@ -1,5 +1,5 @@
 Spree::LineItem.class_eval do
-  
+
   validate :validate_quantity_and_stock
 
   private
@@ -11,13 +11,13 @@ Spree::LineItem.class_eval do
     # avoid reload of order.inventory_units by using direct lookup
     unless !Spree::Config[:track_inventory_levels]                        ||
            Spree::Config[:allow_backorders]                               ||
-           order   && Spree::InventoryUnit.order_id_equals(order).first.present? ||
+            order   && Spree::InventoryUnit.where(:order_id => order.id).first.present? ||
            variant && quantity <= variant.on_hand
       errors.add(:quantity, I18n.t("validation.is_too_large") + " (#{self.variant.name})")
     end
 
     return unless variant
-    
+
 =begin # Commented out until Order#shipped_units not restored in the Core
     if variant.product.assembly?
       variant.product.parts.each do |part|
@@ -31,7 +31,7 @@ Spree::LineItem.class_eval do
       end
     end
 =end
-    
+
   end
 
 end
