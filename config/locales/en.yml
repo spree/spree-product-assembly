@@ -3,4 +3,5 @@ en:
   can_be_part: Can be part
   individual_sale: Individual sale
   no_variants: No variants
+  no_match_found: No match found. Please make sure that the product is available as part.
   parts: Parts
