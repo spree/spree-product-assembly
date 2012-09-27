@@ -1,5 +1,5 @@
 Spree::Product.class_eval do
-  
+
   has_and_belongs_to_many  :assemblies, :class_name => "Spree::Product",
         :join_table => "spree_assemblies_parts",
         :foreign_key => "part_id", :association_foreign_key => "assembly_id"
@@ -41,6 +41,7 @@ Spree::Product.class_eval do
     end
   end
 
+
   def add_part(variant, count = 1)
     ap = Spree::AssembliesPart.get(self.id, variant.id)
     if ap
@@ -48,7 +49,11 @@ Spree::Product.class_eval do
       ap.save
     else
       self.parts << variant
-      set_part_count(variant, count) if count > 1
+      if count > 1
+        set_part_count(variant, count)
+      else
+        update_assemblies_count_on_hand
+      end
     end
   end
 
@@ -74,6 +79,16 @@ Spree::Product.class_eval do
         ap.destroy
       end
     end
+  end
+
+  def update_assemblies_count_on_hand
+      if self.parts.blank?
+        count = 0
+      else
+        count = self.on_hand
+      end
+      self.master.update_column(:count_on_hand, count)
+      self.update_column(:count_on_hand, count)
   end
 
   def assembly?

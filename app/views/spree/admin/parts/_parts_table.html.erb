@@ -3,6 +3,7 @@
   	<tr>
   	  <th><%= t("sku") %></th>
   		<th><%= t("name") %></th>
+  		<th><%= t("stock") %></th>
   		<th><%= t("options") %></th>
   		<th><%= t("qty") %></th>
   		<th></th>
@@ -13,6 +14,7 @@
       <tr id="<%= dom_id(part, :sel)%>">
         <td><%= part.sku %></td>
         <td><%= part.product.name %></td>
+        <td><%= part.product.on_hand %></td>
         <td><%= variant_options part %></td>
         <td><%= text_field_tag :count, @product.count_of(part) %></td>
   	    <td class="actions">
@@ -21,10 +23,10 @@
                       set_count_admin_product_part_url(@product, part),
                       :class => "set_count_admin_product_part_link") %>
 
-          <%= link_to(icon('delete') + ' ' + t('remove'), 
+          <%= link_to(icon('delete') + ' ' + t('remove'),
                       remove_admin_product_part_url(@product, part),
-                      :class => "remove_admin_product_part_link") %>             
-  	    </td>        
+                      :class => "remove_admin_product_part_link") %>
+  	    </td>
       </tr>
     <% end %>
     <% if parts.empty? %>
