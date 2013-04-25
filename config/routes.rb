@@ -1,7 +1,7 @@
 Spree::Core::Engine.routes.prepend do
 
   namespace :admin do
-    resources :products do
+    resources :products, :only => [] do
       resources :parts do
         member do
           post :select
