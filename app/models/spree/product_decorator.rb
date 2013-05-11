@@ -12,14 +12,14 @@ Spree::Product.class_eval do
   scope :individual_saled, where(["spree_products.individual_sale = ?", true])
 
   scope :active, lambda { |*args|
-    not_deleted.individual_saled.available(args.first)
+    not_deleted.individual_saled.available(nil, args.first)
   }
 
   attr_accessible :can_be_part, :individual_sale
 
   # returns the number of inventory units "on_hand" for this product
   def on_hand_with_assembly(reload = false)
-    if self.assembly? && Spree::Config[:track_inventory_levels]
+    if Spree::Config[:track_inventory_levels] && self.assembly?
       parts(reload).map{|v| v.on_hand / self.count_of(v) }.min
     else
       on_hand_without_assembly
@@ -34,7 +34,7 @@ Spree::Product.class_eval do
 
   alias_method :orig_has_stock?, :has_stock?
   def has_stock?
-    if self.assembly? && Spree::Config[:track_inventory_levels]
+    if Spree::Config[:track_inventory_levels] && self.assembly?
       !parts.detect{|v| self.count_of(v) > v.on_hand}
     else
       self.orig_has_stock?
