@@ -1,4 +1,6 @@
-# Product Assembly
+# Spree Product Assembly
+
+[![Build Status](https://travis-ci.org/westonplatter/spree-product-assembly.png)](https://travis-ci.org/westonplatter/spree-product-assembly)
 
 Create a product which is composed of other products.
 
@@ -18,11 +20,21 @@ Run bundle install as well as the extension intall command to copy and run migra
 
 _Use 1-3-stable branch for Spree 1.3.x compatibility_
 
-# Use
+## Testing
+
+You'll need to create a simple spree app to test the extension within. Create the spree dummy app via,  
+
+    bundle exec rake test_app
+
+And run the test via standard rake task,  
+
+    bundle exec rake spec
+
+## Use
 
 This extension adds a `can_be_part` boolean attribute to the spree_products_table.
 You'll need to check that flag on the backend product form so that it can be
-be found by the parts searchs form.
+be found by the parts search form.
 
 Once a product is included as a _part_ of another it will be included on the order
 shipment with zero costs.
