@@ -13,7 +13,8 @@
 <br/>
 <div id="search_hits"></div>
 <%= javascript_tag do %>
-  function search_for_parts(){
+  window.SP = window.SP || {};
+  window.SP.search_for_parts = function(){
     $.ajax({
      data: {q: $("#searchtext").val() },
      dataType: 'html',

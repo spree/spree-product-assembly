@@ -1,4 +1,4 @@
-window.SP = SP || {};
+window.SP = window.SP || {};
 
 $(function() {
   $("#searchtext").keypress(function (e) {
