@@ -3,19 +3,32 @@ Spree::LineItem.class_eval do
   validate :validate_quantity_and_stock
 
   private
+
     def validate_quantity_and_stock
-      unless quantity && quantity >= 0
+      unless has_quantity?
         errors.add(:quantity, I18n.t("validation.must_be_non_negative"))
       end
-      # avoid reload of order.inventory_units by using direct lookup
-      unless !Spree::Config[:track_inventory_levels]                        ||
-             Spree::Config[:allow_backorders]                               ||
-             order   && Spree::InventoryUnit.where(:order_id => order.id).first.present? ||
-             variant && quantity <= variant.on_hand
+
+      unless sufficient_inventory_for_order?
         errors.add(:quantity, I18n.t("validation.is_too_large") + " (#{self.variant.name})")
       end
 
       return unless variant
+    end
+
+    def has_quantity?
+      quantity && quantity >= 0
+    end
+
+    def sufficient_inventory_for_order?
+      return true if Spree::Config[:allow_backorders]
+      return true unless Spree::Config[:track_inventory_levels]
+      if product.assembly?
+        product.parts.each do |part|
+          return false if part.on_hand < 1
+        end
+      end
+      true
     end
 
     # Overriden from Spree core to properly manage inventory units when item
