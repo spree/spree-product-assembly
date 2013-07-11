@@ -9,11 +9,10 @@ Spree::InventoryUnit.class_eval do
       variant = line_item.variant
       quantity = line_item.quantity
       product = variant.product
-      
+
+      increase(order, variant, quantity)
       if product.assembly?
         product.parts.each{|part| increase(order, part, quantity * product.count_of(part)) }
-      else
-        increase(order, variant, quantity)
       end
     end
   end
