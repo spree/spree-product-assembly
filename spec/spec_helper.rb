@@ -13,6 +13,8 @@ require 'spree/testing_support/authorization_helpers'
 RSpec.configure do |config|
   config.color = true
   config.mock_with :rspec
+
+  # Required to be set to true if use shared connection.
   config.use_transactional_fixtures = true
 
   config.include FactoryGirl::Syntax::Methods
