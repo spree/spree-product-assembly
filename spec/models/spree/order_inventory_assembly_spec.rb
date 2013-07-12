@@ -13,7 +13,7 @@ module Spree
 
       line_item.update_attributes!(quantity: 3)
       order.reload.create_proposed_shipments
-      order.finalize! 
+      order.finalize!
     end
 
     subject { OrderInventoryAssembly.new(line_item.reload) }
