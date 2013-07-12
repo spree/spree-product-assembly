@@ -1,6 +1,6 @@
 module Spree
   module Stock
-    # Responsible for keeping packages consistent with items in the order 
+    # Responsible for keeping packages consistent with items in the order
     #
     # It loops through the packages received and pick up only what the
     # order actually needs. Irrevelant packages items have their items quantity
@@ -17,7 +17,7 @@ module Spree
     # and prunes the others:
     #
     #   [#<Spree::Order:0xb378e098> - Stein 1 on_hand]
-    # 
+    #
     # In case packages don't have any on_hand items the first backordered is
     # kept and the others pruned before returning
     class AssemblyPrioritizer

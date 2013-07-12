@@ -1,0 +1,8 @@
+---
+sv:
+  spree:
+    available_parts: Tillgängliga delar
+    can_be_part: Kan vara del
+    individual_sale: Individuell försäljning
+    no_variants: Inga varianter
+    parts: Delar

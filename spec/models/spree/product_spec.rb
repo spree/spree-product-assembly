@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Spree::Product do
-  before(:each) do
-    @product = FactoryGirl.create(:product, :name => "Foo Bar")
+  before do
+    @product = create(:product, :name => "Foo Bar")
     @master_variant = Spree::Variant.find_by_product_id(@product.id, :conditions => ["is_master = ?", true])
   end
-    
+
   describe "Spree::Product.active" do
-    before(:each) do
+    before do
       Spree::Product.delete_all
       @not_available = create(:product, :available_on => Time.now + 15.minutes)
       @future_product = create(:product, :available_on => Time.now + 2.weeks)
@@ -42,18 +42,18 @@ describe Spree::Product do
   end
 
   describe "Spree::Product Assembly" do
-    before(:each) do
+    before do
       @product = create(:product)
       @part1 = create(:product, :can_be_part => true)
       @part2 = create(:product, :can_be_part => true)
       @product.add_part @part1.master, 1
       @product.add_part @part2.master, 4
     end
-    
+
     it "is an assembly" do
       @product.should be_assembly
     end
-    
+
     it 'changing part qty changes count on_hand' do
       @product.set_part_count(@part2, 2)
       @product.count_of(@part2).should == 2
