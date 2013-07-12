@@ -1,9 +1,8 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 gemspec
 
 gem 'spree', '~> 2.0.0'
-gem 'pry-rails'
 
 group :assets do
   gem 'coffee-rails', '~> 3.2.2'
@@ -11,6 +10,9 @@ group :assets do
 end
 
 group :test do
+  gem 'rspec'
+  gem 'sqlite3'
+  gem 'ffaker'
   gem 'capybara', '~> 2.1.0'
   gem 'selenium-webdriver', '~> 2.32.0'
 end
