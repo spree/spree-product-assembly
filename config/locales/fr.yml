@@ -1,5 +1,5 @@
 ---
-fr-FR:
+fr:
   spree:
     available_parts: Parties disponibles
     can_be_part: Peut faire partie d'un package
