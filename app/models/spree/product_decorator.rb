@@ -15,6 +15,8 @@ Spree::Product.class_eval do
   scope :active, lambda { |*args|
     not_deleted.individual_saled.available(nil, args.first)
   }
+  
+  attr_accessible :can_be_part, :individual_sale
 
   validate :assembly_cannot_be_part, :if => :assembly?
 
