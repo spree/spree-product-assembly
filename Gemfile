@@ -2,10 +2,14 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'spree', github: 'spree/spree', :branch => 'master'
-
 gem 'pry-rails'
 gem 'pg'
+gem 'spree', branch: '2-2-stable'
+gem 'spree_sample', '~> 2.2'
+gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
+gem 'spring'
+gem 'durable_decorator_rails'
+
 
 group :assets do
   gem 'coffee-rails', '~> 4.0.0'
