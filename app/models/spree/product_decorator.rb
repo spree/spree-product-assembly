@@ -74,14 +74,18 @@ Spree::Product.class_eval do
 
   durably_decorate :total_on_hand , mode: 'strict', sha: 'bdc96bf9a2738a7e18fa3e1f431ccb9cda8b83a7' do
     total = original_total_on_hand
+    total += parts_min_total_on_hand
+    total
+  end
 
+  def parts_min_total_on_hand
     min = Float::INFINITY
+
     self.parts.map do |part|
       count = part.total_on_hand / assembly_part(part).count
       min = count if count < min
     end
 
-    total += min if min != Float::INFINITY
-    total
+    min != Float::INFINITY ? min : 0
   end
 end
