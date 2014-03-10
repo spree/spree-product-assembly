@@ -13,34 +13,19 @@ Spree::Product.class_eval do
 
   validate :assembly_cannot_be_part, :if => :assembly?
 
-  delegate :parts, :assemblies_parts, :add_part, :remove_part, :set_part_count, to: :master
+  delegate :parts, :assemblies_parts, :add_part, :remove_part, :set_part_count, :count_of, to: :master
 
   def assembly?
-    parts.present?
+    variants_including_master.any?{ |v| v.parts.present? }
   end
 
   def assembly_cannot_be_part
     errors.add(:can_be_part, Spree.t(:assembly_cannot_be_part)) if can_be_part
   end
 
-  def assembly_part(variant)
-    Spree::AssembliesPart.get(self.id, variant.id)
-  end
-
   durably_decorate :total_on_hand , mode: 'strict', sha: 'bdc96bf9a2738a7e18fa3e1f431ccb9cda8b83a7' do
     total = original_total_on_hand
-    total += parts_min_total_on_hand
+    total += master.parts_min_total_on_hand
     total
-  end
-
-  def parts_min_total_on_hand
-    min = Float::INFINITY
-
-    self.parts.map do |part|
-      count = part.total_on_hand / assembly_part(part).count
-      min = count if count < min
-    end
-
-    min != Float::INFINITY ? min : 0
   end
 end
