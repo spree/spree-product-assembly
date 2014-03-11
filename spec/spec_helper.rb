@@ -12,7 +12,6 @@ Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f }
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 require 'spree/testing_support/authorization_helpers'
-require 'spree/testing_support/order_walkthrough'
 
 RSpec.configure do |config|
   config.color = true
