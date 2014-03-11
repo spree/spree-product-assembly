@@ -30,6 +30,8 @@ module Spree
 
       context "in stock" do
         before do
+          StockItem.update_all 'count_on_hand = 10'
+
           expect(parts[0]).to be_in_stock
           expect(parts[1]).to be_in_stock
         end
@@ -45,7 +47,10 @@ module Spree
       let(:parts) { (1..2).map { create(:variant) } }
 
       before do
-        product.parts << parts
+        StockItem.update_all 'count_on_hand = 10'
+
+        variant.parts = parts
+
         order.create_proposed_shipments
         order.finalize!
       end
@@ -53,6 +58,7 @@ module Spree
       it "verifies inventory units via OrderIventoryAssembly" do
         OrderInventoryAssembly.should_receive(:new).with(line_item).and_return(inventory)
         inventory.should_receive(:verify).with(line_item.target_shipment)
+
         line_item.save
       end
 
