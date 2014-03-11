@@ -4,11 +4,11 @@ module Spree
   describe OrderInventoryAssembly do
     let(:order) { create(:order_with_line_items) }
     let(:line_item) { order.line_items.first }
-    let(:bundle) { line_item.product }
+    let(:bundle) { line_item.variant }
     let(:parts) { (1..3).map { create(:variant) } }
 
     before do
-      bundle.parts << [parts]
+      line_item.variant.parts = parts
       bundle.set_part_count(parts.first, 3)
 
       line_item.update_attributes!(quantity: 3)

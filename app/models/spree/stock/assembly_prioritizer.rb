@@ -20,28 +20,17 @@ module Spree
     # 
     # In case packages don't have any on_hand items the first backordered is
     # kept and the others pruned before returning
-    class AssemblyPrioritizer
+    class AssemblyPrioritizer < Prioritizer
       attr_reader :packages, :order
-
-      def initialize(order, packages)
-        @order = order
-        @packages = packages
-      end
-
-      def prioritized_packages
-        sort_packages
-        adjust_packages
-        prune_packages
-        packages
-      end
 
       private
         def adjust_packages
           order.line_items.each do |line_item|
+            product = line_item.product
 
-            if line_item.product.assembly?
-              line_item.parts.each do |part|
-                update_packages_quantity(part, line_item, part_quantity_required(line_item, part))
+            if product.assembly?
+              line_item.assemblies_parts.each do |assembly|
+                update_packages_quantity(assembly.part, line_item, assembly.count * line_item.quantity)
               end
             else
               update_packages_quantity(line_item.variant, line_item, line_item.quantity)
@@ -49,12 +38,8 @@ module Spree
           end
         end
 
-        def part_quantity_required(line_item, part)
-          line_item.count_of(part) * line_item.quantity
-        end
-
         def update_packages_quantity(variant, line_item, quantity)
-          package_adjuster = Adjuster.new(variant, quantity, :on_hand)
+          package_adjuster = @adjuster_class.new(variant, quantity, :on_hand)
           visit_packages(package_adjuster, line_item)
 
           package_adjuster.status = :backordered
@@ -66,14 +51,6 @@ module Spree
             item = package.find_item package_adjuster.variant, package_adjuster.status, line_item
             package_adjuster.adjust(item) if item
           end
-        end
-
-        def prune_packages
-          packages.reject! { |pkg| pkg.empty? }
-        end
-
-        def sort_packages
-          # override method for custom sorting
         end
     end
   end

@@ -1,7 +1,6 @@
 Spree::Core::Engine.routes.append do
-
   namespace :admin do
-    resources :products do
+    resources :variants do
       resources :parts do
         member do
           post :select
@@ -15,5 +14,4 @@ Spree::Core::Engine.routes.append do
       end
     end
   end
-
 end

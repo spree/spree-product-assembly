@@ -6,8 +6,8 @@ module Spree
         product = line_item.product
 
         valid = if product.assembly?
-          line_item.parts.all? do |part|
-            Stock::Quantifier.new(part.id).can_supply?(line_item.count_of(part) * line_item.quantity)
+          line_item.assemblies_parts.all? do |assembly|
+            Stock::Quantifier.new(assembly.part.id).can_supply?( assembly.count * line_item.quantity )
           end
         else
           Stock::Quantifier.new(line_item.variant_id).can_supply? line_item.quantity
