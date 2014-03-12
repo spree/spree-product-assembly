@@ -6,3 +6,4 @@ en:
     no_variants: No variants
     parts: Parts
     assembly_cannot_be_part: assembly can't be part
+    add_parts_after_create_variant: You will be able to add parts after create the variant
