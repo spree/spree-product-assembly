@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Spree::Product do
   before(:each) do
     @product = FactoryGirl.create(:product, :name => "Foo Bar")
-    @master_variant = Spree::Variant.where(is_master: true).find_by_product_id(@product.id)
+    @master_variant = @product.master
   end
-    
+
   describe "Spree::Product.active" do
     before(:each) do
       Spree::Product.delete_all
@@ -65,6 +65,51 @@ describe Spree::Product do
     it 'changing part qty changes count on_hand' do
       @product.set_part_count(@part2.master, 2)
       @product.count_of(@part2.master).should == 2
+    end
+  end
+
+  describe '#total_on_hand' do
+    context 'with parts' do
+      let(:part1){ create :product, can_be_part: true }
+      let(:part2){ create :product, can_be_part: true }
+
+      context 'same quantity' do
+        before do
+          part1.stock_items.last.update_attribute :count_on_hand, 10
+          part2.stock_items.last.update_attribute :count_on_hand, 5
+
+          @product.add_part part1.master, 1
+          @product.add_part part2.master, 1
+        end
+
+        it 'gets the minimum count on hand in the parts' do
+          expect(@product.total_on_hand).to eq 5
+        end
+      end
+
+      context 'different quantity' do
+        before do
+          part1.stock_items.last.update_attribute :count_on_hand, 10
+          part2.stock_items.last.update_attribute :count_on_hand, 5
+
+          @product.add_part part1.master, 1
+          @product.add_part part2.master, 2
+        end
+
+        it 'gets the minimum count on hand in the parts' do
+          expect(@product.total_on_hand).to eq 2
+        end
+      end
+    end
+
+    context 'without parts' do
+      before do
+        @product.stock_items.last.update_attribute :count_on_hand, 10
+      end
+
+      it 'gets the minimum count on hand in the parts' do
+        expect(@product.total_on_hand).to eq 10
+      end
     end
   end
 end
