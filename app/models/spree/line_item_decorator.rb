@@ -2,8 +2,6 @@ module Spree
   LineItem.class_eval do
     scope :assemblies, -> { joins(:product => :parts).uniq }
 
-    has_many :inventory_units
-
     def any_units_shipped?
       OrderInventoryAssembly.new(self).inventory_units.any? do |unit|
         unit.shipped?
@@ -17,14 +15,14 @@ module Spree
       OrderInventoryAssembly.new(self).verify
       self.destroy
     end
-    
+
     # The parts that apply to this particular LineItem. Usually `product#parts`, but
     # provided as a hook if you want to override and customize the parts for a specific
     # LineItem.
     def parts
       product.parts
     end
-    
+
     # The number of the specified variant that make up this LineItem. By default, calls
     # `product#count_of`, but provided as a hook if you want to override and customize
     # the parts available for a specific LineItem. Note that if you only customize whether
