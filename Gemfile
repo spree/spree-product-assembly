@@ -2,9 +2,11 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'spree', github: 'spree/spree', :branch => 'master'
+gem 'spree', github: 'spree/spree', :branch => '2-1-stable'
 
 gem 'pry-rails'
+gem 'pg'
+
 gem 'pg'
 
 group :assets do
