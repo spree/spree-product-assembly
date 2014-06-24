@@ -1,22 +1,21 @@
 module Spree
   Order.class_eval do
     def validate_parts_supply
-      totals = {}
-
       quantity_by_variant = self.line_items.map(&:quantity_by_variant).flatten
-      quantity_by_variant.each do |var_quanity|
-        totals.merge!(var_quanity) do |key, new_val, prev_val|
-          {
-            count: new_val[:count] + prev_val[:count],
-            variant: new_val[:variant],
-          }
+
+      totals = quantity_by_variant.inject do |hash, variant_quantity|
+        hash.merge(variant_quantity) do |key, new_count, prev_count|
+          new_count + prev_count
         end
       end
 
-      totals.values.each do |total|
-        quanitifier = Stock::Quantifier.new(total[:variant])
-        unless quanitifier.can_supply? total[:count]
-          self.errors[:"line_items.quantity"] << Spree.t(:out_of_stock, scope: :order_populator, item: total[:variant].name)
+      totals.each_pair do |variant, quantity|
+        quanitifier = Stock::Quantifier.new(variant)
+
+        unless quanitifier.can_supply? quantity
+          self.errors[:"line_items.quantity"] << Spree.t(:out_of_stock,
+                                                         scope: :order_populator,
+                                                         item: variant.name)
         end
       end
     end

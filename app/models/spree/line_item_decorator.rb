@@ -11,11 +11,10 @@ module Spree
     def quantity_by_variant
       if self.product.assembly?
         self.product.assemblies_parts.map do |assembly_part|
-          { assembly_part.part.id => { count: assembly_part.count * self.quantity,
-                                       variant: assembly_part.part } }
+          { assembly_part.part => assembly_part.count * self.quantity }
         end
       else
-        [ { self.variant.id => { count: self.quantity, variant: self.variant } } ]
+        [ { self.variant => self.quantity } ]
       end
     end
 
