@@ -8,6 +8,17 @@ module Spree
       end
     end
 
+    def quantity_by_variant
+      if self.product.assembly?
+        self.product.assemblies_parts.map do |assembly_part|
+          { assembly_part.part.id => { count: assembly_part.count * self.quantity,
+                                       variant: assembly_part.part } }
+        end
+      else
+        [ { self.variant.id => { count: self.quantity, variant: self.variant } } ]
+      end
+    end
+
     # Destroy and verify inventory so that units are restocked back to the
     # stock location
     def destroy_along_with_units
@@ -15,14 +26,14 @@ module Spree
       OrderInventoryAssembly.new(self).verify
       self.destroy
     end
-    
+
     # The parts that apply to this particular LineItem. Usually `product#parts`, but
     # provided as a hook if you want to override and customize the parts for a specific
     # LineItem.
     def parts
       product.parts
     end
-    
+
     # The number of the specified variant that make up this LineItem. By default, calls
     # `product#count_of`, but provided as a hook if you want to override and customize
     # the parts available for a specific LineItem. Note that if you only customize whether
