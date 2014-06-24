@@ -16,7 +16,7 @@ module Spree
       end
     end
 
-    describe '.count_on_hand' do
+    describe '.available_count' do
       let(:assembly_part) { assembly.assemblies_parts.first }
       let(:assembly) { create :assembly, parts: [[variant, 2 ]] }
 
@@ -24,7 +24,7 @@ module Spree
         variant.stock_items.first.adjust_count_on_hand 3
       end
 
-      subject { assembly_part.count_on_hand }
+      subject { assembly_part.available_count }
 
       it 'returns the number of times the quantity specified may be fulfilled' do
         expect(subject).to eq 1
