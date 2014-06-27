@@ -8,5 +8,9 @@ module Spree
     def self.get(assembly_id, part_id)
       find_or_initialize_by(assembly_id: assembly_id, part_id: part_id)
     end
+
+    def available_count
+      part.total_on_hand / count
+    end
   end
 end

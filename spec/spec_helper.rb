@@ -16,6 +16,8 @@ require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 require 'spree/testing_support/authorization_helpers'
 
+FactoryGirl.find_definitions
+
 RSpec.configure do |config|
   config.mock_with :rspec
   config.use_transactional_fixtures = true
