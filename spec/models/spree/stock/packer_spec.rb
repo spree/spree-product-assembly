@@ -15,7 +15,7 @@ module Spree
           packages.size.should eq 1
           packages.first.contents.size.should eq 5
         end
-        
+
       end
 
       context 'build bundle product package' do
@@ -43,33 +43,33 @@ module Spree
 
         context "store doesn't track inventory" do
           before { Spree::Config.track_inventory_levels = false }
-          
+
           it 'adds items as on-hand, not backordered' do
             stock_item = stock_location.stock_item(order.line_items.first)
-            
+
             package = subject.product_assembly_package
             package.contents.size.should eq 4 + parts.count
             package.contents.each {|ci| ci.state.should eq :on_hand}
           end
         end
-      
+
         context "are tracking inventory" do
           before do
             Spree::Config.track_inventory_levels = true
             # by default, variant factory sets track_inventory to true
           end
-          
+
           it 'adds items as backordered' do
             package = subject.product_assembly_package
             package.contents.size.should eq 4 + parts.count
             package.contents.each {|ci| ci.state.should eq :backordered}
           end
         end
-      
+
         context 'variants and parts do not track inventory' do
           before(:each) do
             Spree::Config.track_inventory_levels = true
-            order.line_items.each do |li| 
+            order.line_items.each do |li|
               li.variant.track_inventory = false
               li.save!
               if li.product.assembly?
@@ -80,7 +80,7 @@ module Spree
               end
             end
           end
-          
+
           it 'adds items as on-hand, not backordered' do
             package = subject.product_assembly_package
             package.contents.size.should eq 4 + parts.count
