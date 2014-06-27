@@ -67,7 +67,6 @@ describe "Checkout" do
 
   end
 
-
   def fill_in_address
     address = "order_bill_address_attributes"
     fill_in "#{address}_firstname", :with => "Ryan"
