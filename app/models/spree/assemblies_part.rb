@@ -14,5 +14,9 @@ module Spree
     def destroy
       self.class.delete_all(["assembly_id = ? AND part_id = ?", assembly_id, part_id])
     end
+
+    def in_stock?
+      part.total_on_hand >= count
+    end
   end
 end
