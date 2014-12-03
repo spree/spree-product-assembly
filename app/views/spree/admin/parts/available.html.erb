@@ -11,7 +11,6 @@
 	<thead>
 		<tr>
   		<th><%= t("name") %></th>
-  		<th><%= t("options") %></th>
   		<th><%= t("qty") %></th>
   		<th></th>
 		</tr>
@@ -20,15 +19,9 @@
     <% @available_products.each do |product| %>
       <tr id="<%= dom_id(product) %>">
         
-        <td><%= product.name %></td>
         <td>
-          <% if product.has_variants? %>
-            <%= select_tag "part[id]", 
-                options_for_select(product.variants.map { |v| [variant_options(v), v.id] }) %>
-          <% else %>
-            <%= hidden_field_tag "part[id]", product.master.id %>
-            <%= t :no_variants %>
-          <% end %>
+          <%= product.name %>
+          <%= hidden_field_tag "part[id]", product.id %>
         </td>
         <td><%= text_field_tag "part[count]", 1 %></td>
 		    <td class="actions">
@@ -47,8 +40,7 @@
 
 <%= javascript_tag do %>
   $("a.add_product_part_link").click(function(){
-    part_id_val = $('select option:selected', $(this).parent().parent()).val() ||
-                  $('input:first', $(this).parent().parent()).val();
+    part_id_val = $('input:first', $(this).parent().parent()).val();
     params = { part_count :  $('input:last', $(this).parent().parent()).val(),
                part_id : part_id_val};
     return make_post_request($(this), params);

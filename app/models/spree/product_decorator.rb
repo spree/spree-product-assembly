@@ -1,13 +1,12 @@
 Spree::Product.class_eval do
-  
+
   has_and_belongs_to_many  :assemblies, :class_name => "Spree::Product",
         :join_table => "spree_assemblies_parts",
         :foreign_key => "part_id", :association_foreign_key => "assembly_id"
 
-  has_and_belongs_to_many  :parts, :class_name => "Spree::Variant",
+  has_and_belongs_to_many  :parts, :class_name => "Spree::Product",
         :join_table => "spree_assemblies_parts",
         :foreign_key => "assembly_id", :association_foreign_key => "part_id"
-
 
   scope :individual_saled, where(["spree_products.individual_sale = ?", true])
 
@@ -33,6 +32,7 @@ Spree::Product.class_eval do
   end
 
   alias_method :orig_has_stock?, :has_stock? unless method_defined?(:orig_has_stock?)
+
   def has_stock?
     if Spree::Config[:track_inventory_levels] && self.assembly?
       !parts.detect{|v| self.count_of(v) > v.on_hand}
@@ -41,19 +41,19 @@ Spree::Product.class_eval do
     end
   end
 
-  def add_part(variant, count = 1)
-    ap = Spree::AssembliesPart.get(self.id, variant.id)
+  def add_part(part, count = 1)
+    ap = Spree::AssembliesPart.get(self.id, part.id)
     if ap
       ap.count += count
       ap.save
     else
-      self.parts << variant
-      set_part_count(variant, count) if count > 1
+      self.parts << part
+      set_part_count(part, count) if count > 1
     end
   end
 
-  def remove_part(variant)
-    ap = Spree::AssembliesPart.get(self.id, variant.id)
+  def remove_part(part)
+    ap = Spree::AssembliesPart.get(self.id, part.id)
     unless ap.nil?
       ap.count -= 1
       if ap.count > 0
@@ -64,8 +64,8 @@ Spree::Product.class_eval do
     end
   end
 
-  def set_part_count(variant, count)
-    ap = Spree::AssembliesPart.get(self.id, variant.id)
+  def set_part_count(part, count)
+    ap = Spree::AssembliesPart.get(self.id, part.id)
     unless ap.nil?
       if count > 0
         ap.count = count
@@ -84,8 +84,8 @@ Spree::Product.class_eval do
     assemblies.present?
   end
 
-  def count_of(variant)
-    ap = Spree::AssembliesPart.get(self.id, variant.id)
+  def count_of(part)
+    ap = Spree::AssembliesPart.get(self.id, part.id)
     ap ? ap.count : 0
   end
 

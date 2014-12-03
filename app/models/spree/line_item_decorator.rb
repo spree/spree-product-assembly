@@ -1,6 +1,7 @@
 Spree::LineItem.class_eval do
 
   validate :validate_quantity_and_stock
+  has_many :assembly_variants
 
   private
     def validate_quantity_and_stock
