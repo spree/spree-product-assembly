@@ -3,6 +3,19 @@ Spree::LineItem.class_eval do
   validate :validate_quantity_and_stock
   has_many :assembly_variants
 
+  def sufficient_stock?
+    return true if Spree::Config[:allow_backorders]
+    if product.assembly?
+      !assembly_variants.map(&:variant).select{|part| part.on_hand < product.count_of(part.product)}.any?
+    else
+      if new_record? || !order.completed?
+        variant.on_hand >= quantity
+      else
+        variant.on_hand >= (quantity - self.changed_attributes['quantity'].to_i)
+      end
+    end
+  end
+
   private
     def validate_quantity_and_stock
       unless quantity && quantity >= 0
