@@ -12,11 +12,10 @@ module Spree
           describe "#units" do
             it "returns an inventory unit for each part of each quantity for the order's line items" do
               units = subject.units
-              expect(units.count).to eq 4
+              line_item = order.line_items.first
+              expect(units.count).to eq line_item.parts.size
               expect(units[0].line_item.quantity).to eq order.line_items.first.quantity
               expect(units[0].line_item.quantity).to eq bundle_item_quantity
-
-              line_item = order.line_items.first
 
               expect(units.map(&:variant)).to match_array line_item.parts
             end
