@@ -5,6 +5,7 @@
     else row.style.display = '';
   }
 </script>
+
 <h4><%= Spree.t(:available_parts) %></h4>
 <table class="index">
 	<thead>
@@ -12,7 +13,6 @@
   		<th><%= Spree.t(:name) %></th>
   		<th><%= Spree.t(:options) %></th>
   		<th><%= Spree.t(:qty) %></th>
-  		<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,9 +32,9 @@
         <td><%= text_field_tag "part[count]", 1 %></td>
 		    <td class="actions">
           <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
-		      <%= link_to(icon('add') + ' ' + Spree.t(:select), 
+		      <%= link_to(icon('add') + ' ', 
 		                  admin_product_parts_path(@product),
-		                  :class => "add_product_part_link") %>
+		                  :class => "add_product_part_link fa fa-plus no-text") %>
 		    </td>           
       </tr>
     <% end %>
