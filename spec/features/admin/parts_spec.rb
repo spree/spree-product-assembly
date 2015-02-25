@@ -18,7 +18,9 @@ describe "Parts", type: :feature, js: true do
     fill_in "searchtext", with: mug.name
     click_on "Search"
 
-    within("#search_hits") { click_on "Select" }
+    within("#search_hits") do
+      find(".add_product_part_link").click
+    end
     page.should have_content(mug.sku)
 
     within("#product_parts") do
