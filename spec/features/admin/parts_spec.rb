@@ -21,7 +21,7 @@ describe "Parts", type: :feature, js: true do
     within("#search_hits") do
       find(".add_product_part_link").click
     end
-    page.should have_content(mug.sku)
+    expect(page).to have_content(mug.sku)
 
     within("#product_parts") do
       find(".remove_admin_product_part_link").click
