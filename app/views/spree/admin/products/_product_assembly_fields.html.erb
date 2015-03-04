@@ -1,13 +1,27 @@
-<div class="left six columns alpha">
-  <div class="field">
-    <%= f.label :can_be_part, Spree.t(:can_be_part)%>
-    <%= f.check_box(:can_be_part) %>
+<div class="twelve columns alpha omega">
+  <div class="left three columns alpha">
+    <div class="field">
+      <%= f.label :can_be_part, Spree.t(:can_be_part)%>
+      <%= f.check_box(:can_be_part) %>
+    </div>
   </div>
-</div>
-<div class="right six columns omega">
-  <div class="field">
-    <%= f.label :individual_sale, Spree.t(:individual_sale)%>
-    <%= f.check_box(:individual_sale) %>
+  <div class="left three columns">
+    <div class="field">
+      <%= f.label :individual_sale, Spree.t(:individual_sale)%>
+      <%= f.check_box(:individual_sale) %>
+    </div>
+  </div>
+  <div class="right three columns">
+     <div class="field">
+      <%= f.label :individual_sale, Spree.t(:backorderable)%>
+      <%= f.check_box(:individual_sale) %>
+    </div>
+  </div>
+  <div class="right three columns omega">
+    <div class="field">
+      <%= f.label :track_inventory, Spree.t(:track_inventory)%>
+      <%= f.check_box(:track_inventory) %>
+    </div>
   </div>
 </div>
 

@@ -30,6 +30,19 @@ module Spree
       end
     end
 
+    def sufficient_stock?
+      if product.assembly?
+        product.parts.each do |part|
+          if !Stock::Quantifier.new(part).can_supply? (quantity * count_of(part))
+            return false
+          end
+        end
+      else
+        return Stock::Quantifier.new(variant).can_supply? quantity
+      end
+      true
+    end
+
     private
       def update_inventory
         if (changed? || target_shipment.present?) && self.order.has_checkout_step?("delivery")
