@@ -3,7 +3,7 @@ module Spree
     Quantifier.class_eval do
 
       def total_on_hand
-        if @variant.should_track_inventory? && !@variant.product.assembly?
+        if @variant.should_track_inventory? && (!@variant.product.assembly? || !@variant.is_master || @variant.track_inventory)
           return stock_items.sum(:count_on_hand)
         elsif @variant.product.assembly? && @variant.is_master?
           lowest_value = Float::INFINITY

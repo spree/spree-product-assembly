@@ -2,7 +2,7 @@ module Spree
   StockItem.class_eval do
 
     def total_on_hand
-      if self.variant.should_track_inventory? && (!self.variant.product.assembly? || !self.variant.is_master?)
+      if self.variant.should_track_inventory? && (!self.variant.product.assembly? || !self.variant.is_master? || self.variant.track_inventory)
         return self.try(:count_on_hand)
       elsif self.variant.product.assembly? && self.variant.is_master?
         lowest_value = Float::INFINITY
