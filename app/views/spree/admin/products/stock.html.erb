@@ -96,7 +96,7 @@
                         <% part = variant %>
                         <td class="align-center"><%= @product.count_of(part) %>
                       <% end %>
-                      <td class="align-center"><%= item.total_on_hand %></td>
+                      <td class="align-center"><%= item.count_on_hand %></td>
                       <td class="align-center">
 
                         <%= form_tag admin_stock_item_path(item), method: :put, class: 'toggle_stock_item_backorderable' do %>

@@ -23,7 +23,7 @@ Spree::Variant.class_eval do
   # This considers both variant tracking flag and site-wide inventory tracking settings
   # Add checking for assembly with master variant that doesn't track inventory
   def should_track_inventory?
-    self.track_inventory? && Spree::Config.track_inventory_levels || self.product.assembly? && self.is_master?
+    Spree::Config.track_inventory_levels && (self.track_inventory? || self.product.assembly? && self.is_master?)
   end
 
 end
