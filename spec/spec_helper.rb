@@ -6,6 +6,8 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
 require 'rspec/rails'
+require 'rspec/active_model/mocks'
+require 'rspec/collection_matchers'
 require 'ffaker'
 require 'database_cleaner'
 
@@ -20,6 +22,7 @@ require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 require 'spree/testing_support/authorization_helpers'
 require 'spree/testing_support/capybara_ext'
+require 'spree/testing_support/preferences'
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 
