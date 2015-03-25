@@ -105,7 +105,7 @@ module Spree
       end
 
       it 'creates a stock_item if not found for a variant_id' do
-        stock_item = subject.stock_item_or_create(variant.id)
+        stock_item = subject.stock_item_or_create(variant)
         expect(stock_item.variant).to eq variant
       end
     end
