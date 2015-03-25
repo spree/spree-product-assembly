@@ -1,36 +1,5 @@
-<% content_for :page_actions do %>
-  <li><%= button_link_to Spree.t(:back_to_products_list), session[:return_to] || admin_products_url, :icon => 'arrow-left' %></li>
-<% end %>
+<!-- replace 'tr[data-hook=admin_product_stock_management_index_rows]' -->
 
-<%= render :partial => 'spree/admin/shared/product_sub_menu' %>
-<%= render :partial => 'spree/admin/shared/product_tabs', :locals => { :current => 'Stock Management' } %>
-<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @product } %>
-
-<div id="add_stock_form">
-  <%= render 'add_stock_form' %>
-</div>
-
-<table class="index" id="listing_product_stock">
-  <colgroup>
-    <col style="width: 25%" />
-    <col style="width: 25%" />
-    <col style="width: 25%" />
-    <col style="width: 25%" />
-  </colgroup>
-  <thead>
-    <tr data-hook="admin_product_stock_management_index_headers">
-      <% if @product.assembly? && !@product.master.track_inventory? %>
-        <th><%= Spree.t(:part) %></th>
-      <% else %>
-        <th><%= Spree.t(:variant) %></th>
-      <% end %>
-      <th colspan="3"><%= Spree.t(:stock_location_info) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @variants.each do |variant| %>
-      <% if variant.stock_items.present? %>
-        <tr id="<%= spree_dom_id variant %>" data-hook="admin_product_stock_management_index_rows" class="<%= cycle('odd', 'even') %>">
           <td class="align-center">
             <% if @product.assembly? && !variant.is_master? %>
               <%= variant.sku_and_options_text(true) %>
@@ -125,7 +94,5 @@
           </td>
           <% reset_cycle("stock_locations") %>
         <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <tr>
+      

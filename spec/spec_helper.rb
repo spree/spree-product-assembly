@@ -8,6 +8,8 @@ require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require 'rspec/rails'
 require 'rspec/active_model/mocks'
 require 'rspec/collection_matchers'
+require 'rspec/its'
+
 require 'ffaker'
 require 'database_cleaner'
 
@@ -19,6 +21,7 @@ Capybara.javascript_driver = :poltergeist
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each {|f| require f }
 
 require 'spree/testing_support/factories'
+require_relative '../spec/factories'
 require 'spree/testing_support/url_helpers'
 require 'spree/testing_support/authorization_helpers'
 require 'spree/testing_support/capybara_ext'
