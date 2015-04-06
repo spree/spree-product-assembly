@@ -11,6 +11,17 @@ Spree::Variant.class_eval do
     assemblies.exists?
   end
 
+  def backorderable
+    is_backorderable?
+  end
+
+  def backorderable=(value)
+    self.stock_items.each do |stock_item|
+      stock_item.backorderable = value
+      stock_item.save
+    end
+  end
+
   def sku_and_options_text(show_product_name=false)
     if !show_product_name
       "#{sku} #{options_text}".strip
