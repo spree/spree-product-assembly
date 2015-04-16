@@ -1,56 +1,68 @@
-<!-- replace 'tr[data-hook=admin_product_stock_management_index_rows]' -->
+<!-- replace 'table[id=listing_product_stock]' -->  
 
-          <td class="align-center">
-            <% if @product.assembly? && !variant.is_master? %>
+  <table class="table table-bordered" id="listing_product_stock">
+    <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 7%" />
+      <col style="width: 60%" />
+    </colgroup>
+
+    <thead>
+      <tr data-hook="admin_product_stock_management_index_headers">
+        <% if @product.assembly? && !@product.master.track_inventory? %>
+          <th><%= Spree.t(:part) %></th>
+          <th><%= Spree.t(:qty) %></th>
+        <% else %>
+          <th colspan="2"><%= Spree.t(:variant) %></th>
+        <% end %>
+        <th><%= Spree.t(:stock_location_info) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @variants.each do |variant| %>
+        <% if variant.stock_items.present? %>
+          <tr id="<%= spree_dom_id variant %>" data-hook="admin_product_stock_management_index_rows">
+          <% if @product.assembly? && !variant.is_master? %>
+            <td class="align-center">
               <%= variant.sku_and_options_text(true) %>
-            <% else %>
+          <% else %>
+            <td colspan="2" class="align-center">
               <%= variant.sku_and_options_text %>
-            <% end %>
+          <% end %>
             <br>
             <% if variant.images.present? %>
               <%= image_tag variant.images.first.attachment.url(:mini) %>
             <% end %>
-            <br/>
-            <%= form_tag admin_product_variants_including_master_path(@product, variant, format: :js), method: :put, class: 'toggle_variant_track_inventory' do %>
-                <% if @product.assembly? && !variant.is_master? %>
-                  <% disabled = true %>
-                <% else %>
-                  <% disabled = false %>
-                <% end %>
-                <%= check_box_tag 'track_inventory', 1, variant.track_inventory?, disabled: disabled,
-                                  class: 'track_inventory_checkbox' %>
-                <%= label_tag :track_inventory, Spree.t(:track_inventory) %>
-                <%= hidden_field_tag 'variant[track_inventory]', variant.track_inventory?,
-                    class: 'variant_track_inventory',
-                    id: "variant_track_inventory_#{variant.id}" %>
+            <br>
+              <%= form_tag admin_product_variants_including_master_path(@product, variant, format: :js), method: :put, class: 'toggle_variant_track_inventory' do %>
+                  <% if @product.assembly? && !variant.is_master? %>
+                    <% disabled = true %>
+                  <% else %>
+                    <% disabled = false %>
+                  <% end %>
+                  <%= check_box_tag 'track_inventory', 1, variant.track_inventory?, disabled: disabled,
+                                    class: 'track_inventory_checkbox' %>
+                  <%= label_tag :track_inventory, Spree.t(:track_inventory) %>
+                  <%= hidden_field_tag 'variant[track_inventory]', variant.track_inventory?,
+                      class: 'variant_track_inventory',
+                      id: "variant_track_inventory_#{variant.id}" %>
+              <% end %>
+            </td>
+            <% if @product.assembly? && !variant.is_master? %>
+              <% part = variant %>
+              <td class="align-center"><%= @product.count_of(part) %></td>
             <% end %>
-          </td>
-          <% if @product.assembly? && !variant.is_master? %>
-            <td colspan="5" class="stock_location_info">
-          <% else %>
-            <td colspan="4" class="stock_location_info">
-          <% end %>
+            <td class="stock_location_info">
             <div class="stock_location_info_div">
               <table>
                 <colgroup>
-                  <% if @product.assembly? && !variant.is_master? %>
-                    <col style="width: 38%" />
-                    <col style="width: 13%" />
-                    <col style="width: 17%" />
-                    <col style="width: 19%" />
-                    <col style="width: 13%" />
-                  <% else %>
-                    <col style="width: 45%" />
-                    <col style="width: 20%" />
-                    <col style="width: 20%" />
-                    <col style="width: 15%" />
-                  <% end %>
+                  <col style="width: 45%" />
+                  <col style="width: 20%" />
+                  <col style="width: 20%" />
+                  <col style="width: 15%" />
                 </colgroup>
                 <thead>
                   <th><%= Spree.t(:stock_location) %></th>
-                  <% if @product.assembly? && !variant.is_master? %>
-                    <th><%= Spree.t(:quantity) %>
-                  <% end %>
                   <th><%= Spree.t(:total_on_hand) %></th>
                   <th><%= Spree.t(:backorderable) %></th>
                   <th class="actions"></th>
@@ -61,10 +73,6 @@
 
                     <tr id="stock-item-<%= item.id %>" class="<%= cycle('odd', 'even', :name => 'stock_locations')%>">
                       <td class="align-center"><%= item.stock_location.name %></td>
-                      <% if @product.assembly? && !variant.is_master? %>
-                        <% part = variant %>
-                        <td class="align-center"><%= @product.count_of(part) %>
-                      <% end %>
                       <td class="align-center"><%= item.count_on_hand %></td>
                       <td class="align-center">
 
@@ -91,8 +99,9 @@
                 </tbody>
               </table>
             </div>
-          </td>
-          <% reset_cycle("stock_locations") %>
+            </td>
+          </tr>
         <% end %>
-      <tr>
-      
+      <% end %>
+    </tbody>
+  </table>
