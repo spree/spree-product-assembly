@@ -33,7 +33,7 @@ module Spree
     def sufficient_stock?
       if product.assembly?
         product.parts.each do |part|
-          if !Stock::Quantifier.new(part).can_supply? (quantity * count_of(part))
+          if !Stock::Quantifier.new(part).can_supply?(quantity * count_of(part))
             return false
           end
         end

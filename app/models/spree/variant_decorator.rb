@@ -30,11 +30,11 @@ Spree::Variant.class_eval do
     end
   end
 
-  # Shortcut method to determine if inventory tracking is enabled for this variant
-  # This considers both variant tracking flag and site-wide inventory tracking settings
+  # Shortcut method to determine if inventory tracking enabled for this variant
+  # Considers both variant tracking flag & site-wide inventory tracking settings
   # Add checking for assembly with master variant that doesn't track inventory
   def should_track_inventory?
-    Spree::Config.track_inventory_levels && (self.track_inventory? || self.product.assembly? && self.is_master?)
+    Spree::Config.track_inventory_levels &&
+      (self.track_inventory? || self.product.assembly? && self.is_master?)
   end
-
 end

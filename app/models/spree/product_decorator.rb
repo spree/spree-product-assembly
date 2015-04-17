@@ -1,6 +1,6 @@
 Spree::Product.class_eval do
   delegate_belongs_to :master, :track_inventory, :backorderable
-  
+
   has_and_belongs_to_many  :parts, :class_name => "Spree::Variant",
         :join_table => "spree_assemblies_parts",
         :foreign_key => "assembly_id", :association_foreign_key => "part_id"
@@ -55,7 +55,9 @@ Spree::Product.class_eval do
     if variants_including_master.loaded?
       variants_including_master.any? { |v| !v.should_track_inventory? }
     else
-      !Spree::Config.track_inventory_levels || !self.assembly? && variants_including_master.where(track_inventory: false).any? || self.assembly? && variants.where(track_inventory: false).any?
+      !Spree::Config.track_inventory_levels || !self.assembly? &&
+        variants_including_master.where(track_inventory: false).any? ||
+        self.assembly? && variants.where(track_inventory: false).any?
     end
   end
 
@@ -66,7 +68,9 @@ Spree::Product.class_eval do
       lowest_value = Float::INFINITY
       self.parts.each do |part|
         if part.should_track_inventory?
-          lowest_value = part.stock_items.sum(:count_on_hand)/self.count_of(part) < lowest_value ? part.stock_items.sum(:count_on_hand)/self.count_of(part) : lowest_value
+          lowest_value =
+            part.stock_items.sum(:count_on_hand)/self.count_of(part) < lowest_value ?
+            part.stock_items.sum(:count_on_hand)/self.count_of(part) : lowest_value
         end
       end
       return lowest_value
