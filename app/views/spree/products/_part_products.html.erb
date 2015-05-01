@@ -1,0 +1,24 @@
+<% if @product.parts.any? %>
+  <ul id="products" class="inline product-listing" data-hook>
+    <% @product.parts.each do |part| %>
+      <% if Spree::Config[:show_zero_stock_products] || part.has_stock? %>
+        <li id="product_<%= part.id %>" class="columns three <%= cycle("alpha", "secondary", "", "omega secondary") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
+          <div class="product-image">
+            <%= link_to small_image(part, :itemprop => "name"), part %>
+          </div>
+          <%= link_to truncate(part.name, :length => 50), part, :class => 'info', :itemprop => "name", :title => part.name %>
+          <% if part.has_variants? %>
+             <%= select_tag "part[#{part.id}]", 
+                 options_for_select(part.variants.map { |v| [variant_options(v), v.id] unless v.option_values.empty? || (!v.in_stock && !Spree::Config[:show_zero_stock_products])}.compact) %>
+            <% else %>
+              <%= hidden_field_tag "part[#{part.id}]", part.master.id %>
+              <%= t :no_variants %>
+            <% end %>
+          <% if part.individual_sale? %>
+            <span class="price selling" itemprop="price"><%= number_to_currency part.price %></span>
+          <% end %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>
