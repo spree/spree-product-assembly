@@ -5,7 +5,7 @@ module Spree
         @variant = variant
         if @variant.product.assembly? && @variant.is_master && !@variant.track_inventory
           @stock_items = []
-          @variant.product.parts.each do |part|
+          @variant.product.parts.each.map do |part|
             @stock_items << Spree::StockItem.joins(:stock_location).where(:variant_id => part.id, 
               Spree::StockLocation.table_name => { :active => true })
           end

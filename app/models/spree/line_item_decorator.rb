@@ -10,7 +10,7 @@ module Spree
     # provided as a hook if you want to override and customize the parts for a specific
     # LineItem.
     def parts
-      product.parts
+      self.product.parts
     end
     
     # The number of the specified variant that make up this LineItem. By default, calls
@@ -19,7 +19,7 @@ module Spree
     # a variant is included in the LineItem, and don't customize the quantity of that part
     # per LineItem, you shouldn't need to override this method.
     def count_of(variant)
-      product.count_of(variant)
+      self.product.count_of(variant)
     end
 
     def quantity_by_variant
@@ -31,14 +31,10 @@ module Spree
     end
 
     def sufficient_stock?
-      if product.assembly?
-        product.parts.each do |part|
-          if !Stock::Quantifier.new(part).can_supply?(quantity * count_of(part))
-            return false
-          end
+      self.quantity_by_variant.each do |key, value|
+        if !Stock::Quantifier.new(key).can_supply?(value)
+          return false
         end
-      else
-        return Stock::Quantifier.new(variant).can_supply? quantity
       end
       true
     end

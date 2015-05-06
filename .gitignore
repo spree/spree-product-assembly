@@ -1,6 +1,0 @@
-spec/dummy
-Gemfile.lock
-coverage
-*.DS_Store
-.bundle
-vendor
