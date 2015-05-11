@@ -1,14 +1,43 @@
-<div class="left six columns alpha">
-  <div class="field">
-    <%= f.label :can_be_part, Spree.t(:can_be_part)%>
-    <%= f.check_box(:can_be_part) %>
-  </div>
-</div>
-<div class="right six columns omega">
-  <div class="field">
-    <%= f.label :individual_sale, Spree.t(:individual_sale)%>
-    <%= f.check_box(:individual_sale) %>
-  </div>
+<div class="twelve columns alpha omega">
+  <% if @product.assembly? %>
+    <div class="left three columns alpha">
+      <div class="field">
+        <%= f.label :can_be_part, Spree.t(:can_be_part)%>
+        <%= f.check_box(:can_be_part) %>
+      </div>
+    </div>
+    <div class="left three columns">
+      <div class="field">
+        <%= f.label :individual_sale, Spree.t(:individual_sale)%>
+        <%= f.check_box(:individual_sale) %>
+      </div>
+    </div>
+      <div class="right three columns">
+         <div class="field">
+          <%= f.label :backorderable, Spree.t(:backorderable)%>
+          <%= f.check_box(:backorderable) %>
+        </div>
+      </div>
+      <div class="right three columns omega">
+        <div class="field">
+          <%= f.label :track_inventory, Spree.t(:track_inventory)%>
+          <%= f.check_box(:track_inventory) %>
+        </div>
+      </div>
+  <% else %>
+     <div class="left three columns alpha">
+      <div class="field">
+        <%= f.label :can_be_part, Spree.t(:can_be_part)%>
+        <%= f.check_box(:can_be_part) %>
+      </div>
+    </div>
+    <div class="right nine columns omega">
+      <div class="field">
+        <%= f.label :individual_sale, Spree.t(:individual_sale)%>
+        <%= f.check_box(:individual_sale) %>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <% if @product.assembly? %>
@@ -17,6 +46,7 @@
       jQuery(document).ready(function(){
         $("input[id='product_on_hand']").attr('disabled',true).parent().hide();
         $("input#product_can_be_part").attr('disabled',true);
+        $("input#product_backorderable").attr('disabled', true);
       });
     </script>
   <% end %>

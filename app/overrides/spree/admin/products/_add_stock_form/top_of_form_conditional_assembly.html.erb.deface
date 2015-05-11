@@ -1,0 +1,5 @@
+<!-- insert_top 'fieldset' -->
+
+    <% if @product.assembly? && !@product.master.track_inventory?%>
+      <legend align="center"><%= Spree.t(:stock_management) %></legend>
+    <% else %>
