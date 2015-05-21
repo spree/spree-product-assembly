@@ -7,13 +7,13 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
   end
 
   def remove
-    @part = Spree::Variant.find(params[:id])
+    @part = Spree::Product.find(params[:id])
     @product.remove_part(@part)
     render :template => 'spree/admin/parts/update_parts_table'
   end
 
   def set_count
-    @part = Spree::Variant.find(params[:id])
+    @part = Spree::Product.find(params[:id])
     @product.set_part_count(@part, params[:count].to_i)
     render :template => 'spree/admin/parts/update_parts_table'
   end
@@ -34,7 +34,7 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
   end
 
   def create
-    @part = Spree::Variant.find(params[:part_id])
+    @part = Spree::Product.find(params[:part_id])
     qty = params[:part_count].to_i
     @product.add_part(@part, qty) if qty > 0
     render 'spree/admin/parts/update_parts_table'

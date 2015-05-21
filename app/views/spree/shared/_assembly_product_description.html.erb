@@ -1,0 +1,22 @@
+<% product = item.product %>
+<% if product.assembly? %>
+<ul class='assembly_parts'>
+  <% product.parts.each do |part| %>
+    <li>
+      (<%= product.count_of(part) %>)  <%= link_to part.name, product_path(part) %>  (<%= part.sku %>)</br>
+      <% variant = (part.variants & item.assembly_variants.map(&:variant)).first%>
+      <% if variant %>
+        <ul>
+          <li><%= variant.options_text %>
+            <% if @order.insufficient_stock_lines.include? item %>
+              <span class="out-of-stock">
+                (<%= variant.in_stock? ? t(:insufficient_stock, :on_hand => variant.on_hand) : t(:out_of_stock) %>)
+              </span>
+            <% end %>
+          </li>
+        </ul>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+<% end %>
