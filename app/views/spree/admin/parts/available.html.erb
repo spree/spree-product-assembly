@@ -26,13 +26,13 @@
             <%= Spree.t(:no_variants) %>
           <% end %>
         </td>
-        <td><%= text_field_tag "part[count]", 1 %></td>
+        <td><%= number_field_tag "part[count]", 1, min: 1, style: 'width: 80px', class: 'form-control' %></td>
         <td class="actions">
-          <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
-          <%= link_to_with_icon('add', Spree.t(:select),
+          <%= link_to_with_icon('add', Spree.t('select'),
                       admin_product_parts_path(product),
                       :data => { 'target' => dom_id(part), 'master-variant-id' => part.master.id},
-                      :class => "add_product_part_link") %>
+                      :class => "add_product_part_link btn btn-primary btn-sm",
+                      :no_text => true) %>
         </td>
       </tr>
     <% end %>

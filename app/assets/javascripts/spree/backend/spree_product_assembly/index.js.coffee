@@ -37,16 +37,12 @@ $(document).ready ->
     searchForParts()
 
   makePostRequest = (link, post_params = {}) ->
-    spinner = $("img.spinner", link.parent())
-    spinner.show()
-
     request = $.ajax
       type: "POST"
       url: link.attr("href")
       data: post_params
       dateType: "script"
     request.fail showErrorMessages
-    request.always -> spinner.hide()
 
     false
 
@@ -56,7 +52,6 @@ $(document).ready ->
     part = {}
     link = $(this)
     row = $("#" + link.data("target"))
-    loadingIndicator = $("img.spinner", link.parent())
     quantityField = $('input:last', row)
 
     part.count = quantityField.val()
@@ -73,6 +68,8 @@ $(document).ready ->
       part.variant_id = $('input[name="part[id]"]', row).val()
 
     makePostRequest(link, {assemblies_part: part})
+    
+    false
 
   partsTable.on "click", "a.set_count_admin_product_part_link", ->
     params = { count: $("input", $(this).parent().parent()).val() }
