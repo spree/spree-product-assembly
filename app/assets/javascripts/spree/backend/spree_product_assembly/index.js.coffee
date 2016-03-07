@@ -22,7 +22,6 @@ $(document).ready ->
      success: (request) ->
        searchResults.html(request)
        searchResults.show()
-       $('select.select2').select2()
      type: 'POST'
      url: searchUrl
 
