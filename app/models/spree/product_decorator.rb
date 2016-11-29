@@ -11,6 +11,8 @@ Spree::Product.class_eval do
     .limit(30)
   }
 
+  scope :without_parts, -> { eager_load(:assemblies_parts).where("spree_assemblies_parts.assembly_id IS NULL") }
+
   validate :assembly_cannot_be_part, if: :assembly?
 
   def variants_or_master
