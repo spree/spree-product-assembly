@@ -61,4 +61,8 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
     def existing_part_params
       params.permit(:id, :count)
     end
+
+    def model_class
+      Spree::AssembliesPart
+    end
 end
