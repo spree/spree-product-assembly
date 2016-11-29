@@ -20,7 +20,7 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
       @available_products = []
     else
       query = "%#{params[:q]}%"
-      @available_products = Spree::Product.search_can_be_part(query)
+      @available_products = Spree::Product.without_parts.search_can_be_part(query)
       @available_products.uniq!
     end
     respond_to do |format|
