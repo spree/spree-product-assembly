@@ -9,11 +9,7 @@ RSpec.feature "Orders", type: :feature, js: true do
   background do
     bundle.master.parts << [parts]
 
-    order.contents.update_cart({line_items_attributes: {
-      id: line_item.id,
-      quantity: 3,
-      options: {}
-    }})
+    line_item.update_attributes!(quantity: 3)
 
     order.next
     order.create_proposed_shipments
@@ -33,6 +29,7 @@ RSpec.feature "Orders", type: :feature, js: true do
     wait_for_ajax
 
     visit spree.edit_admin_order_path(order)
+
     within("table.stock-contents") do
       stock_quantities = all(".item-qty-show").map(&:text)
 

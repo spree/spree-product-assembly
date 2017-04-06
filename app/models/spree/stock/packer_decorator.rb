@@ -9,13 +9,15 @@ module Spree
           variant = inventory_unit.variant
           unit = inventory_unit.dup # Can be used by others, do not use directly
           if variant.should_track_inventory?
-            next unless stock_location.stocks? variant
-            on_hand, backordered = stock_location.fill_status(variant, unit.quantity)
-            package.add(unit, :backordered) if backordered.positive?
-            package.add(unit, :on_hand) if on_hand.positive?
+            next unless stock_location.stock_item(variant.id).present?
+
+            on_hand, backordered = stock_location.fill_status(variant, 1)
+            package.add(unit, :backordered) if backordered > 0
+            package.add(unit, :on_hand) if on_hand > 0
           else
             package.add unit
           end
+          @allocated_inventory_units << unit
         end
         package
       end
