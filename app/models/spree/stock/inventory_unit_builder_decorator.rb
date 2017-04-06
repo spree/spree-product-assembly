@@ -22,7 +22,7 @@ module Spree
           pending: true,
           variant: variant,
           line_item: line_item,
-          order: @order
+          order_id: @order.id
         )
       end
     end

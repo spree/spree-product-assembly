@@ -25,6 +25,32 @@ module Spree
 
     private
 
+    def add_to_shipment(shipment, quantity)
+      units = shipment.inventory_units
+      if variant.should_track_inventory?
+        on_hand, back_order = shipment.stock_location.fill_status(variant, quantity)
+
+        on_hand.times { units << set_up_invetory_unit('on_hand', variant, order, line_item) }
+        back_order.times { units << set_up_invetory_unit('backordered', variant, order, line_item) }
+      else
+        quantity.times { units << set_up_invetory_unit('on_hand', variant, order, line_item) }
+      end
+
+      shipment.inventory_units = units
+      shipment.save
+
+      # adding to this shipment, and removing from stock_location
+      if order.completed?
+        shipment.stock_location.unstock(variant, quantity, shipment)
+      end
+
+      quantity
+    end
+
+    def set_up_invetory_unit(state, variant, order, line_item)
+      InventoryUnit.new(state: state, variant_id: variant.id, order_id: order.id, line_item_id: line_item.id)
+    end
+
     def verify_parts(shipment, total_parts, existing_parts)
       if existing_parts < total_parts
         verifiy_add_to_shipment(shipment, total_parts, existing_parts)
