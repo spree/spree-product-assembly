@@ -1,6 +1,14 @@
 module Spree
   module Stock
     Packer.class_eval do
+      attr_reader :allocated_inventory_units
+
+      def initialize(stock_location, inventory_units, splitters = [Splitter::Base])
+        @stock_location = stock_location
+        @inventory_units = inventory_units
+        @splitters = splitters
+        @allocated_inventory_units = []
+      end
 
       def default_package
         package = Package.new(stock_location)
@@ -16,6 +24,7 @@ module Spree
           else
             package.add unit
           end
+          allocated_inventory_units << unit
         end
         package
       end
