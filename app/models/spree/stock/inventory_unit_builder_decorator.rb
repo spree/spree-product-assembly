@@ -9,7 +9,7 @@ module Spree
         end
       end
 
-      def build_inventory_unit(variant, line_item)
+      def build_inventory_unit(variant, line_item, quantity)
         @order.inventory_units.includes(
           variant: {
             product: {
@@ -22,7 +22,7 @@ module Spree
           pending: true,
           variant: variant,
           line_item: line_item,
-          order: @order, 
+          order: @order,
           quantity: quantity
         )
       end
