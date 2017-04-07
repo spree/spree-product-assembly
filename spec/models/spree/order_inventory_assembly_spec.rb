@@ -146,30 +146,44 @@ module Spree
                   line_item_quantity: 2,
                   parts: [{ count: 1 }, { count: 1 }, { count: 3 }]
                 )
+
                 shipped_shipment = create(:shipment, state: 'shipped')
-                InventoryUnit.all[0..2].each do |unit|
+                shipped_variant = variants.first
+                shipped = InventoryUnit.where(variant: shipped_variant)
+
+                shipped.each do |unit|
                   unit.update_attribute(:shipment_id, shipped_shipment.id)
+                  unit.update_attribute(:state, 'shipped')
                 end
+
+                new_quantity = 1
+
+                line_item.update_column(:quantity, new_quantity)
+                line_item.reload
 
                 inventory = OrderInventoryAssembly.new(line_item)
-
-                line_item.update_column(:quantity, 1)
                 inventory.verify
 
-                expect(inventory.inventory_units.count).to eq 6
-
                 unshipped_units = unshipped_shipment.inventory_units
-                expect(unshipped_units.count).to eq 3
+                shipped_units = shipped_shipment.inventory_units
+
+                units_last_variant = new_quantity * variants.last.assemblies_variants.first.count
+                units_second_variant = new_quantity * variants.second.assemblies_variants.first.count
+                units_first_variant = shipped.count
+
+                expected_units_count = units_first_variant + units_second_variant + units_last_variant
+
+                expect(inventory.inventory_units.count).to eq expected_units_count
+
+                expect(unshipped_units.count).to eq(expected_units_count - shipped.count)
                 unshipped_units.each do |unit|
-                  expect(unit.variant).to eq variants[2]
+                  expect(unit.variant).not_to eq shipped_variant
                 end
 
-                shipped_units = shipped_shipment.inventory_units
-                expect(shipped_units.count).to eq 3
-                shipped_units[0..1].each do |unit|
-                  expect(unit.variant).to eq variants[0]
+                expect(shipped_units.count).to eq(shipped.count)
+                shipped_units.each do |unit|
+                  expect(unit.variant).to eq shipped_variant
                 end
-                expect(shipped_units[2].variant).to eq variants[1]
               end
             end
           end

@@ -9,6 +9,7 @@ module Spree
       @order = line_item.order
       @line_item = line_item
       @product = line_item.product
+      @variant = line_item.variant
     end
 
     def verify(shipment = nil)
