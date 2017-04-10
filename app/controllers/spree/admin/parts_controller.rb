@@ -21,11 +21,11 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
     else
       query = "%#{params[:q]}%"
       @available_products = Spree::Product.search_can_be_part(query)
-      @available_products.uniq!
+      @available_products.distinct!
     end
     respond_to do |format|
-      format.html {render :layout => false}
-      format.js {render :layout => false}
+      format.html { render layout: false }
+      format.js { render layout: false }
     end
   end
 
@@ -35,30 +35,30 @@ class Spree::Admin::PartsController < Spree::Admin::BaseController
 
   private
 
-    def save_part(part_params)
-      form = Spree::AssignPartToBundleForm.new(product, part_params)
-      if form.submit
-        render 'spree/admin/parts/update_parts_table'
-      else
-        error_message = form.errors.full_messages.to_sentence
-        render json: error_message.to_json, status: 422
-      end
+  def save_part(part_params)
+    form = Spree::AssignPartToBundleForm.new(product, part_params)
+    if form.submit
+      render 'spree/admin/parts/update_parts_table'
+    else
+      error_message = form.errors.full_messages.to_sentence
+      render json: error_message.to_json, status: 422
     end
+  end
 
-    def product
-      @product ||= Spree::Product.find_by(slug: params[:product_id])
-    end
+  def product
+    @product ||= Spree::Product.find_by(slug: params[:product_id])
+  end
 
-    def new_part_params
-      params.require(:assemblies_part).permit(
-        :count,
-        :part_id,
-        :assembly_id,
-        :variant_selection_deferred
-      )
-    end
+  def new_part_params
+    params.require(:assemblies_part).permit(
+      :count,
+      :part_id,
+      :assembly_id,
+      :variant_selection_deferred
+    )
+  end
 
-    def existing_part_params
-      params.permit(:id, :count)
-    end
+  def existing_part_params
+    params.permit(:id, :count)
+  end
 end
