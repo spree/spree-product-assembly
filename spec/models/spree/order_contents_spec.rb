@@ -50,10 +50,10 @@ describe Spree::OrderContents, type: :model do
         create(:variant_in_stock, product: shirt, option_values: [blue_option])
 
         assembly_part_keychain = create(:assemblies_part,
-               assembly_id: assembly.id,
+               assembly_id: assembly.master.id,
                part_id: keychain.master.id)
         assembly_part_shirt = create(:assemblies_part,
-               assembly_id: assembly.id,
+               assembly_id: assembly.master.id,
                part_id: shirt.master.id,
                variant_selection_deferred: true)
         assembly.reload
