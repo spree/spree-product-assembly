@@ -1,6 +1,5 @@
 module Spree
   OrderContents.class_eval do
-
     def add_to_line_item(variant, quantity, options = {})
       line_item = grab_line_item_by_variant(variant, false, options)
 
@@ -10,23 +9,23 @@ module Spree
       else
         opts = { currency: order.currency }.merge(whitelist(options))
         line_item = order.line_items.new(quantity: quantity,
-                                          variant: variant,
-                                          options: opts)
+                                         variant: variant,
+                                         options: opts)
       end
 
-      line_item.target_shipment = options[:shipment] if options.has_key? :shipment
+      line_item.target_shipment = options[:shipment] if options.key? :shipment
       line_item.save!
 
       line_item
     end
 
     def add_to_line_item_with_parts(variant, quantity, options = {})
-      add_to_line_item_without_parts(variant, quantity, options).
-        tap do |line_item|
+      add_to_line_item_without_parts(variant, quantity, options)
+        .tap do |line_item|
         populate_part_line_items(
           line_item,
           variant.parts_variants,
-          options["selected_variants"]
+          options['selected_variants']
         )
       end
     end
@@ -36,9 +35,9 @@ module Spree
 
     private
 
-    def part_variants_match?(line_item, variant, quantity, options)
-      if line_item.parts.any? && options["selected_variants"]
-        selected_variant_ids = options["selected_variants"].values.map(&:to_i)
+    def part_variants_match?(line_item, _variant, _quantity, options)
+      if line_item.parts.any? && options['selected_variants']
+        selected_variant_ids = options['selected_variants'].values.map(&:to_i)
         matched = part_variant_ids(line_item) & selected_variant_ids
 
         matched == selected_variant_ids

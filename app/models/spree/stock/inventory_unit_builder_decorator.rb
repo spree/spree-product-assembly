@@ -23,8 +23,8 @@ module Spree
             }
           }
         ).build(
-          pending: true,
-          variant: variant,
+          pending:   true,
+          variant:   variant,
           line_item: line_item,
           order: @order
         ).tap do |iu|
