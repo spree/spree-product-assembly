@@ -4,12 +4,16 @@ module Spree
       def units
         @order.line_items.flat_map do |line_item|
           line_item.quantity_by_variant.flat_map do |variant, quantity|
-            Array.new(quantity) { build_inventory_unit(variant, line_item, quantity) }
+            if Gem.loaded_specs['spree_core'].version >= Gem::Version.create('3.3.0')
+              build_inventory_unit(variant, line_item, quantity)
+            else
+              quantity.times.map { build_inventory_unit(variant, line_item) }
+            end
           end
         end
       end
 
-      def build_inventory_unit(variant, line_item, quantity)
+      def build_inventory_unit(variant, line_item, quantity=nil)
         @order.inventory_units.includes(
           variant: {
             product: {
@@ -22,9 +26,10 @@ module Spree
           pending:   true,
           variant:   variant,
           line_item: line_item,
-          order:     @order,
-          quantity:  quantity
-        )
+          order: @order
+        ).tap do |iu|
+          iu.quantity = quantity if quantity
+        end
       end
     end
   end
