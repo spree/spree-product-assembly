@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'launchy'
   s.add_development_dependency 'pg', '~> 0.18'
   s.add_development_dependency 'selenium-webdriver'
+  s.add_development_dependency 'webdrivers', '~> 3.0'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'sass-rails'
   s.add_development_dependency 'simplecov'
