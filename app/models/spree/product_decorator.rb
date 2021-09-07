@@ -6,10 +6,17 @@ module Spree::ProductDecorator
 
     base.scope :individual_saled, -> { where(individual_sale: true) }
 
-    base.scope :search_can_be_part, ->(query){ not_deleted.available.joins(:master)
-      .where(arel_table["name"].matches("%#{query}%").or(Spree::Variant.arel_table["sku"].matches("%#{query}%")))
-      .where(can_be_part: true)
-      .limit(30)
+    base.scope :search_can_be_part, ->(query){ 
+      results = not_deleted.available.joins(:master)
+
+      if defined?(SpreeGlobalize) 
+        # FIXME add sku search when globalize
+        results = results.search_by_name(query)
+      else
+        results = results.where(arel_table["name"].matches("%#{query}%").or(Spree::Variant.arel_table["sku"].matches("%#{query}%")))
+      end
+      
+      results = results.where(can_be_part: true).limit(30)
     }
 
     base.validate :assembly_cannot_be_part, if: :assembly?
