@@ -1,6 +1,7 @@
-<table class="table">
+<table class="table sortable" data-sortable-link="<%= update_positions_admin_product_parts_url(assembly_id: parts&.first&.assembly&.id) %>">
   <thead>
     <tr>
+      <th></th>
       <th><%= Spree.t(:sku) %></th>
       <th><%= Spree.t(:name) %></th>
       <th><%= Spree.t(:options) %></th>
@@ -13,7 +14,11 @@
   <tbody>
     <% parts.each do |part| %>
       <% next unless part.part %>
-      <tr id="<%= dom_id(part, :sel)%>">
+      <%= hidden_field_tag "assembly[id]", part.assembly.id %>
+      <tr id="spree_part_<%= part.part_id %>">
+        <td class="handle move-handle">
+          <span class="icon icon-move handle"></span>
+        </td>
         <td><%= part.sku %></td>
         <td><%= part.name %></td>
         <td>          

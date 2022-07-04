@@ -6,8 +6,8 @@ module Spree
 
     belongs_to :part, class_name: "Spree::Variant", foreign_key: "part_id"
 
+    default_scope { order(:position) }
     delegate :name, :sku, to: :part
-
     after_create :set_master_unlimited_stock
 
     def self.get(assembly_id, part_id)

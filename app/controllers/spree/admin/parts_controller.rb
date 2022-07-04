@@ -37,6 +37,16 @@ module Spree
         save_part(new_part_params)
       end
 
+      def update_positions
+        params[:positions].each do |id, index|
+          Spree::AssembliesPart.where(assembly_id: params[:assembly_id], part_id: id).update_all(position: index)
+        end
+
+        respond_to do |format|
+          format.js { render plain: 'Ok' }
+        end
+      end
+
       private
 
       def save_part(part_params)
