@@ -11,6 +11,7 @@ Spree::Core::Engine.add_routes do
         collection do
           post :available
           get  :selected
+          post :update_positions
         end
       end
     end
