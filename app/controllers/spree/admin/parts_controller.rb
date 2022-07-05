@@ -42,6 +42,9 @@ module Spree
           Spree::AssembliesPart.where(assembly_id: params[:assembly_id], part_id: id).update_all(position: index)
         end
 
+        product = Spree::Product.find_by_slug(params[:product_id])
+        product.touch if product.present?
+
         respond_to do |format|
           format.js { render plain: 'Ok' }
         end
