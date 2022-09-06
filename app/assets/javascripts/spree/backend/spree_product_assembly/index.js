@@ -91,7 +91,8 @@
     partsTable.on("click", "a.set_count_admin_product_part_link", function() {
       var params;
       params = {
-        count: $("input", $(this).parent().parent()).val()
+        count: $("input#count", $(this).parent().parent()).val(),
+        change_part_id: $("select", $(this).parent().parent()).val()
       };
       return makePostRequest($(this), params);
     });

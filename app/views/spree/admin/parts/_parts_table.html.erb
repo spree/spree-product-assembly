@@ -1,31 +1,55 @@
-<table class="table">
+<table class="table sortable" data-sortable-link="<%= update_positions_admin_product_parts_url(assembly_id: parts&.first&.assembly&.id) %>">
   <thead>
-  	<tr>
-  	  <th><%= Spree.t(:sku) %></th>
-  		<th><%= Spree.t(:name) %></th>
+    <tr>
+      <th></th>
+      <th><%= Spree.t(:sku) %></th>
+      <th><%= Spree.t(:name) %></th>
       <th><%= Spree.t(:options) %></th>
       <th><%= Spree.t(:variant) %></th>
-  		<th><%= Spree.t(:qty) %></th>
-  	</tr>
+      <th><%= Spree.t(:qty) %></th>
+      <th class="actions"></th>
+      <th>Stock</th>
+    </tr>
   </thead>
   <tbody>
     <% parts.each do |part| %>
-      <tr id="<%= dom_id(part, :sel)%>">
+      <% next unless part.part %>
+      <%= hidden_field_tag "assembly[id]", part.assembly.id %>
+      <tr id="spree_part_<%= part.part_id %>">
+        <td class="handle move-handle">
+          <span class="icon icon-move handle"></span>
+        </td>
         <td><%= part.sku %></td>
         <td><%= part.name %></td>
-        <td><%= part.options_text %></td>
+        <td>          
+          <% if part.part.product.has_variants? %>
+            <%- opts = part.part.product.variants.map {|v| [v.options_text, v.id] } %>
+            <%= select_tag "part[id]",
+              options_for_select(opts, part&.part_id),
+              include_blank: Spree.t(:user_selectable), class: 'form-control'
+            %>
+          <% else %>
+            <%= hidden_field_tag "part[id]", part.part.master.id %>
+            <%= Spree.t(:no_variants) %>
+          <% end %>          
+        </td>
+
+
         <td><%= variant_including_master_options part.assembly %></td>
         <td><%= text_field_tag :count, part.count, class: "form-control" %></td>
-  	    <td class="actions">
+        <td class="actions">
           <%= image_tag "spinner.gif", :style => "display:none", :class => "spinner" %>
           <%= link_to_with_icon("edit", Spree.t("edit"),
-                      set_count_admin_product_part_url(product, part),
+                      set_count_admin_product_part_url(product, id: part.assembly.id, part_id: part.part_id),
                       :class => "set_count_admin_product_part_link btn btn-primary btn-sm", :no_text => true) %>
 
           <%= link_to_with_icon("delete", Spree.t("delete"),
-                      remove_admin_product_part_url(product, part),
+                      remove_admin_product_part_url(product, id: part.assembly.id, part_id: part.part_id),
                       :class => "remove_admin_product_part_link btn btn-danger btn-sm delete-resource", :no_text => true) %>
-  	    </td>
+        </td>
+        <td>
+          <%= part.part.stock_items.where(state: "available").sum(:count_on_hand) %>
+        </td>
       </tr>
     <% end %>
     <% if parts.empty? %>
