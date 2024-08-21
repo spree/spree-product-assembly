@@ -1,0 +1,2 @@
+surround '[data-hook="cart_form"]'
+partial 'spree/products/show/remove_add_to_cart_button_for_non_individual_sale_products'

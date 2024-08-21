@@ -1,0 +1,2 @@
+insert_bottom 'td[data-hook=order_item_description]' 
+partial 'spree/shared/part_description'
